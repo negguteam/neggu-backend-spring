@@ -1,5 +1,6 @@
 package com.neggu.neggu.controller.v1.lookbook
 
+import com.neggu.neggu.dto.lookbook.LookBookByInviteRequest
 import com.neggu.neggu.dto.lookbook.LookBookRequest
 import com.neggu.neggu.model.lookbook.LookBookCloth
 import com.neggu.neggu.model.cloth.Category
@@ -35,6 +36,13 @@ interface LookBookApi {
         lookBookRequest: LookBookRequest,
     ): LookBook
 
+
+    @Operation(summary = "초대 받은 유저 룩복 저장")
+    fun saveLookBookByInvite(
+        @Schema(hidden = true) user: User,
+        image: MultipartFile,
+        lookBookByInviteRequest: LookBookByInviteRequest
+    ): LookBook
 
     @Operation(summary = "룩북 리스트 조회")
     fun getLookBooks(

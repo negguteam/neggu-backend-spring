@@ -56,11 +56,11 @@ class LookBookController(
 
     @AccessTokenRequire
     @PostMapping(
-        value = [""],
+        "/invite",
         consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun saveLookBookByInvite(
+    override fun saveLookBookByInvite(
         @LoginUser user: User,
         @RequestPart image: MultipartFile,
         @RequestPart lookBookByInviteRequest: LookBookByInviteRequest
