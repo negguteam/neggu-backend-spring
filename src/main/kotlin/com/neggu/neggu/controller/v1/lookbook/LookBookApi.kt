@@ -6,6 +6,7 @@ import com.neggu.neggu.model.cloth.Category
 import com.neggu.neggu.model.cloth.Cloth
 import com.neggu.neggu.model.cloth.ColorGroup
 import com.neggu.neggu.model.cloth.SubCategory
+import com.neggu.neggu.model.invite.LookBookInvite
 import com.neggu.neggu.model.lookbook.LookBook
 import com.neggu.neggu.model.user.User
 import io.swagger.v3.oas.annotations.Operation
@@ -54,4 +55,8 @@ interface LookBookApi {
         lookBookId: String,
     ): LookBook
 
+    @Operation(summary = "네가 좀 꾸며줘")
+    fun inviteUser(
+        @Schema(hidden = true) user: User,
+    ): LookBookInvite
 }

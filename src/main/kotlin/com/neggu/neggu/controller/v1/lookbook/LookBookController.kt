@@ -7,9 +7,11 @@ import com.neggu.neggu.model.cloth.Category
 import com.neggu.neggu.model.cloth.Cloth
 import com.neggu.neggu.model.cloth.ColorGroup
 import com.neggu.neggu.model.cloth.SubCategory
+import com.neggu.neggu.model.invite.LookBookInvite
 import com.neggu.neggu.model.lookbook.LookBook
 import com.neggu.neggu.model.user.User
 import com.neggu.neggu.service.cloth.ClothService
+import com.neggu.neggu.service.invite.InviteService
 import com.neggu.neggu.service.lookbook.LookBookService
 import org.springframework.data.domain.Page
 import org.springframework.http.MediaType
@@ -20,7 +22,8 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/api/v1/lookbook")
 class LookBookController(
     private val clothService: ClothService,
-    private val lookBookService: LookBookService
+    private val lookBookService: LookBookService,
+    private val inviteService: InviteService
 ) : LookBookApi {
 
     @AccessTokenRequire
@@ -73,5 +76,13 @@ class LookBookController(
         @LoginUser user: User, @PathVariable lookBookId: String
     ): LookBook {
         return lookBookService.getLookBook(user, lookBookId)
+    }
+
+    @AccessTokenRequire
+    @PostMapping("/generate/invite")
+    override fun inviteUser(
+        @LoginUser user: User
+    ): LookBookInvite {
+        return inviteService.invite(user)
     }
 }

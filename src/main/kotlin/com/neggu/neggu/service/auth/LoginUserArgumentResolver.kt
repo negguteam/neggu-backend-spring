@@ -1,5 +1,6 @@
 package com.neggu.neggu.service.auth
 
+import com.neggu.neggu.config.LoggerConfig.log
 import com.neggu.neggu.config.LoginUser
 import com.neggu.neggu.exception.*
 import com.neggu.neggu.model.auth.UserClaims
@@ -33,8 +34,8 @@ class LoginUserArgumentResolver(
             webRequest.getAttribute(ATTRIBUTE_KEY, RequestAttributes.SCOPE_REQUEST)
                 ?: throw UnAuthorizedException(ErrorType.Unauthorized)
         val userClaims: UserClaims = value as UserClaims
-        return userRepository.findById(userClaims.id)
-            .orElseThrow { ServerException(ErrorType.UserNotFound) }
+        log.info { "user objectId : ${userClaims.id}" }
+        return userRepository.findById(userClaims.id).orElseThrow { ServerException(ErrorType.UserNotFound) }
     }
 
     companion object {
