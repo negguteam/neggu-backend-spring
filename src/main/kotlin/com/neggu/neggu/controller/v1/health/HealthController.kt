@@ -39,6 +39,6 @@ class HealthController(
 
     @GetMapping("/known-error")
     override fun knownError(): HealthApi.HealthResponse {
-        throw ServerException(ErrorType.UserNotFound)
+        throw ServerException(ErrorType.NotFoundUser)
     }
 }

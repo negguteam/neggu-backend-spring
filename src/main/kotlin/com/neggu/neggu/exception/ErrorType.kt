@@ -46,7 +46,7 @@ sealed class ErrorType(
     data object DuplicateUserLogin : ErrorType(HttpStatus.UNAUTHORIZED, LogLevel.DEBUG, "중복된 로그인이 감지되었습니다.")
 
     // User
-    data object UserNotFound : ErrorType(HttpStatus.NOT_FOUND, LogLevel.DEBUG, "존재하지 않은 사용자입니다.")
+    data object NotFoundUser : ErrorType(HttpStatus.NOT_FOUND, LogLevel.DEBUG, "존재하지 않은 사용자입니다.")
     data object DuplicateNickanme : ErrorType(HttpStatus.NOT_FOUND, LogLevel.ERROR, "중복된 닉네임입니다.")
 
     // Cloth, Lookbook

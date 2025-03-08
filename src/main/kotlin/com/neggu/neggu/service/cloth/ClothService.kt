@@ -66,7 +66,7 @@ class ClothService(
         page: Int,
     ): Page<Cloth> {
         val lookbookInvite = inviteRepository.findByIdOrNull(inviteCode) ?: throw ServerException(ErrorType.NotFoundInvite)
-        val invitedUser = userRepository.findByIdOrNull(lookbookInvite.accountId) ?: throw ServerException(ErrorType.UserNotFound)
+        val invitedUser = userRepository.findByIdOrNull(lookbookInvite.accountId) ?: throw ServerException(ErrorType.NotFoundUser)
         val pageable = PageRequest.of(page, size, Sort.by("createdAt").descending())
         return clothRepository.findClothesDynamic(
             invitedUser.id!!,

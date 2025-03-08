@@ -35,7 +35,7 @@ class LoginUserArgumentResolver(
                 ?: throw UnAuthorizedException(ErrorType.Unauthorized)
         val userClaims: UserClaims = value as UserClaims
         log.info { "user objectId : ${userClaims.id}" }
-        return userRepository.findById(userClaims.id).orElseThrow { ServerException(ErrorType.UserNotFound) }
+        return userRepository.findById(userClaims.id).orElseThrow { ServerException(ErrorType.NotFoundUser) }
     }
 
     companion object {

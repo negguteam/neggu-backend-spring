@@ -21,7 +21,7 @@ class UserWithdrawService(
 ) {
 
     fun withdraw(user: User) {
-        val userId = user.id ?: throw ServerException(ErrorType.UserNotFound)
+        val userId = user.id ?: throw ServerException(ErrorType.NotFoundUser)
 
         deleteCloth(user, userId)
         deleteLookbook(user)

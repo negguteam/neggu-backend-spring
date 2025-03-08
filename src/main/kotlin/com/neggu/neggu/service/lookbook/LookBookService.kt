@@ -47,8 +47,8 @@ class LookBookService(
 
     @Transactional
     fun registerLookBook(user: User, image: MultipartFile, lookBookRequest: LookBookByInviteRequest): LookBook {
-        val lookbookInvite = inviteRepository.findByIdOrNull(lookBookRequest.inviteCode) ?: throw ServerException(ErrorType.NotFoundInvite)
-        val invitedUser = userRepository.findByIdOrNull(lookbookInvite.accountId) ?: throw ServerException(ErrorType.UserNotFound)
+        val lookBookInvite = inviteRepository.findByIdOrNull(lookBookRequest.inviteCode) ?: throw ServerException(ErrorType.NotFoundInvite)
+        val invitedUser = userRepository.findByIdOrNull(lookBookInvite.accountId) ?: throw ServerException(ErrorType.NotFoundUser)
         val fileName = s3Service.uploadFile(user, image)
         val savedLookBook = lookBookRepository.save(LookBook(
             accountId = invitedUser.id!!,
