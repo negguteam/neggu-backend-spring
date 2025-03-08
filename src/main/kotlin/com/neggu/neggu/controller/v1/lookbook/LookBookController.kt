@@ -2,6 +2,7 @@ package com.neggu.neggu.controller.v1.lookbook
 
 import com.neggu.neggu.annotation.AccessTokenRequire
 import com.neggu.neggu.config.LoginUser
+import com.neggu.neggu.dto.lookbook.LookBookByInviteRequest
 import com.neggu.neggu.dto.lookbook.LookBookRequest
 import com.neggu.neggu.model.cloth.Category
 import com.neggu.neggu.model.cloth.Cloth
@@ -51,6 +52,20 @@ class LookBookController(
         @RequestPart lookBookRequest: LookBookRequest
     ): LookBook {
         return lookBookService.registerLookBook(user, image, lookBookRequest)
+    }
+
+    @AccessTokenRequire
+    @PostMapping(
+        value = [""],
+        consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
+        produces = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    fun saveLookBookByInvite(
+        @LoginUser user: User,
+        @RequestPart image: MultipartFile,
+        @RequestPart lookBookByInviteRequest: LookBookByInviteRequest
+    ): LookBook {
+        return lookBookService.registerLookBook(user, image, lookBookByInviteRequest)
     }
 
     @AccessTokenRequire

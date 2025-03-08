@@ -2,12 +2,15 @@ package com.neggu.neggu.service.lookbook
 
 import com.neggu.neggu.config.LoggerConfig.log
 import com.neggu.neggu.config.LoggerConfig.nInfo
+import com.neggu.neggu.dto.lookbook.LookBookByInviteRequest
 import com.neggu.neggu.dto.lookbook.LookBookRequest
 import com.neggu.neggu.exception.ErrorType
 import com.neggu.neggu.exception.ServerException
 import com.neggu.neggu.exception.UnAuthorizedException
 import com.neggu.neggu.model.lookbook.LookBook
+import com.neggu.neggu.model.lookbook.LookBookDecorator
 import com.neggu.neggu.model.user.User
+import com.neggu.neggu.repository.LookBookInviteRepository
 import com.neggu.neggu.repository.LookBookRepository
 import com.neggu.neggu.repository.UserRepository
 import com.neggu.neggu.service.aws.S3Service
@@ -24,18 +27,40 @@ import org.springframework.web.multipart.MultipartFile
 class LookBookService(
     private val lookBookRepository: LookBookRepository,
     private val userRepository: UserRepository,
-    private val s3Service: S3Service
+    private val s3Service: S3Service,
+    private val inviteRepository: LookBookInviteRepository
 ) {
 
     @Transactional
-    fun registerLookBook(user: User, image: MultipartFile, lookBookClothes: LookBookRequest): LookBook {
+    fun registerLookBook(user: User, image: MultipartFile, lookBookRequest: LookBookRequest): LookBook {
         val fileName = s3Service.uploadFile(user, image)
         val savedLookBook = lookBookRepository.save(LookBook(
             accountId = user.id!!,
             imageUrl = fileName,
-            lookBookClothes = lookBookClothes.lookBookClothes
+            lookBookClothes = lookBookRequest.lookBookClothes
         ))
         userRepository.save(user.copy(lookBooks = user.lookBooks + savedLookBook.id!!))
+        return savedLookBook.also {
+            log.nInfo("[Register] LookBook(${it.id}) by user ${user.id}\n Info : $it")
+        }
+    }
+
+    @Transactional
+    fun registerLookBook(user: User, image: MultipartFile, lookBookRequest: LookBookByInviteRequest): LookBook {
+        val lookbookInvite = inviteRepository.findByIdOrNull(lookBookRequest.inviteCode) ?: throw ServerException(ErrorType.NotFoundInvite)
+        val invitedUser = userRepository.findByIdOrNull(lookbookInvite.accountId) ?: throw ServerException(ErrorType.UserNotFound)
+        val fileName = s3Service.uploadFile(user, image)
+        val savedLookBook = lookBookRepository.save(LookBook(
+            accountId = invitedUser.id!!,
+            imageUrl = fileName,
+            lookBookClothes = lookBookRequest.lookBookClothes,
+            decorator = LookBookDecorator(
+                accountId = user.id!!,
+                imageUrl = user.profileImage,
+                targetDate = lookBookRequest.targetDate,
+            )
+        ))
+        userRepository.save(invitedUser.copy(lookBooks = invitedUser.lookBooks + savedLookBook.id!!))
         return savedLookBook.also {
             log.nInfo("[Register] LookBook(${it.id}) by user ${user.id}\n Info : $it")
         }
@@ -60,4 +85,5 @@ class LookBookService(
     fun getLookBook(user: User, lookBookId: String): LookBook {
         return lookBookRepository.findByIdOrNull(lookBookId.toObjectId()) ?: throw ServerException(ErrorType.NotFoundLookBook)
     }
+
 }
