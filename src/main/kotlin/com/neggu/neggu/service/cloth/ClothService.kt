@@ -11,6 +11,7 @@ import com.neggu.neggu.model.cloth.*
 import com.neggu.neggu.model.user.User
 import com.neggu.neggu.repository.BrandRepository
 import com.neggu.neggu.repository.ClothRepository
+import com.neggu.neggu.repository.LookBookInviteRepository
 import com.neggu.neggu.repository.UserRepository
 import com.neggu.neggu.service.aws.S3Service
 import com.neggu.neggu.util.toObjectId
@@ -29,12 +30,52 @@ class ClothService(
     private val brandRepository: BrandRepository,
     private val s3Service: S3Service,
     private val userRepository: UserRepository,
-    private val colorFinder: ColorFinder
+    private val colorFinder: ColorFinder,
+    private val inviteRepository: LookBookInviteRepository
 ) {
 
-    fun getClothes(user: User, category: Category?, subCategory: SubCategory?, colorGroup: ColorGroup?, mood: Mood?, size: Int, page: Int, sortProperty : String = "createdAt"): Page<Cloth> {
+    fun getClothes(
+        user: User,
+        category: Category?,
+        subCategory: SubCategory?,
+        colorGroup: ColorGroup?,
+        mood: Mood?,
+        size: Int,
+        page: Int,
+        sortProperty: String = "createdAt",
+    ): Page<Cloth> {
         val pageable = PageRequest.of(page, size, Sort.by(sortProperty).descending())
-        return clothRepository.findClothesDynamic(user.id!!, category, subCategory, colorGroup?.getColors(), mood, pageable)
+        return clothRepository.findClothesDynamic(
+            user.id!!,
+            category,
+            subCategory,
+            colorGroup?.getColors(),
+            mood,
+            pageable
+        )
+    }
+
+    fun getClothesByInviteCode(
+        user: User,
+        category: Category?,
+        subCategory: SubCategory?,
+        colorGroup: ColorGroup?,
+        mood: Mood?,
+        inviteCode: String,
+        size: Int,
+        page: Int,
+    ): Page<Cloth> {
+        val lookbookInvite = inviteRepository.findByIdOrNull(inviteCode) ?: throw ServerException(ErrorType.NotFoundInvite)
+        val invitedUser = userRepository.findByIdOrNull(lookbookInvite.accountId) ?: throw ServerException(ErrorType.UserNotFound)
+        val pageable = PageRequest.of(page, size, Sort.by("createdAt").descending())
+        return clothRepository.findClothesDynamic(
+            invitedUser.id!!,
+            category,
+            subCategory,
+            colorGroup?.getColors(),
+            mood,
+            pageable
+        )
     }
 
     fun getCloth(id: ObjectId): Cloth {
@@ -57,7 +98,9 @@ class ClothService(
     @Transactional
     fun modifyCloth(user: User, clothRegisterRequest: ClothModifyRequest): Cloth {
         val accountId = clothRegisterRequest.accountId.toObjectId()
-        if (accountId != user.id) { throw UnAuthorizedException(ErrorType.InvalidIdToken) }
+        if (accountId != user.id) {
+            throw UnAuthorizedException(ErrorType.InvalidIdToken)
+        }
         val clothColor = colorFinder.findColor(clothRegisterRequest.colorCode)
 
         val savedCloth = clothRepository.save(clothRegisterRequest.toCloth(clothColor))
@@ -69,7 +112,9 @@ class ClothService(
     @Transactional
     fun deleteCloth(user: User, objectId: ObjectId): Cloth {
         val cloth = clothRepository.findByIdOrNull(objectId) ?: throw ServerException(ErrorType.NotFoundCloth)
-        if (cloth.accountId != user.id) { throw UnAuthorizedException(ErrorType.InvalidIdToken) }
+        if (cloth.accountId != user.id) {
+            throw UnAuthorizedException(ErrorType.InvalidIdToken)
+        }
         clothRepository.delete(cloth)
         s3Service.deleteFile(cloth.imageUrl)
         userRepository.save(user.copy(clothes = user.clothes.filter { it != cloth.id }))
@@ -85,10 +130,13 @@ class ClothService(
         return brandRepository.findAll()
     }
 
-    fun registerCloth(user: User, cloth:Cloth): Cloth {
-        if (cloth.accountId != user.id) { throw UnAuthorizedException(ErrorType.InvalidIdToken) }
+    fun registerCloth(user: User, cloth: Cloth): Cloth {
+        if (cloth.accountId != user.id) {
+            throw UnAuthorizedException(ErrorType.InvalidIdToken)
+        }
         return clothRepository.save(cloth).also {
             log.nInfo("Cloth(${it.id}) updated by user ${user.id}\n Cloth Info : $it")
         }
     }
+
 }

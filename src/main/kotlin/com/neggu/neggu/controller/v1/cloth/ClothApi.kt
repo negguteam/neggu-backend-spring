@@ -35,6 +35,18 @@ interface ClothApi {
         page: Int,
     ): Page<Cloth>
 
+    @Operation(summary = "초대 받은 옷장 조회 API")
+    fun getClothesByInviteCode(
+        @Schema(hidden = true) user: User,
+        category: Category?,
+        subCategory: SubCategory?,
+        colorGroup: ColorGroup?,
+        mood: Mood?,
+        inviteCode: String,
+        size: Int,
+        page: Int
+    ): Page<Cloth>
+
     @Operation(summary = "옷 조회 API")
     @ApiResponse(
         responseCode = "200",
@@ -98,4 +110,5 @@ interface ClothApi {
         description = "브랜드 목록 조회 성공"
     )
     fun getBrands(query: String?): List<ClothBrand>
+
 }

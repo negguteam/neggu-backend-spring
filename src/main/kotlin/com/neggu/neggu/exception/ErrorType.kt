@@ -52,6 +52,7 @@ sealed class ErrorType(
     // Cloth, Lookbook
     data object NotFoundCloth : ErrorType(HttpStatus.NOT_FOUND, LogLevel.DEBUG, "존재하지 않는 옷입니다.")
     data object NotFoundLookBook : ErrorType(HttpStatus.NOT_FOUND, LogLevel.DEBUG, "존재하지 않는 룩북입니다.")
+    data object NotFoundInvite : ErrorType(HttpStatus.NOT_FOUND, LogLevel.DEBUG, "존재하지 않는 초대코드입니다.")
 
     // ObjectId
     data object InvalidObjectId : ErrorType(HttpStatus.BAD_REQUEST, LogLevel.DEBUG, "유효하지 않은 ObjectId입니다.")

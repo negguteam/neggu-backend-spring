@@ -46,6 +46,30 @@ class ClothController(
     }
 
     @AccessTokenRequire
+    @GetMapping("/invite")
+    override fun getClothesByInviteCode(
+        @LoginUser user: User,
+        @RequestParam(required = false) category: Category?,
+        @RequestParam(required = false) subCategory: SubCategory?,
+        @RequestParam(required = false) colorGroup: ColorGroup?,
+        @RequestParam(required = false) mood: Mood?,
+        @RequestParam inviteCode: String,
+        @RequestParam size: Int,
+        @RequestParam page: Int
+    ): Page<Cloth> {
+        return clothService.getClothesByInviteCode(
+            user,
+            category,
+            subCategory,
+            colorGroup,
+            mood,
+            inviteCode,
+            size,
+            page
+        )
+    }
+
+    @AccessTokenRequire
     @PostMapping(value = [""],
         consumes = [MediaType.MULTIPART_FORM_DATA_VALUE],
         produces = [MediaType.APPLICATION_JSON_VALUE]
