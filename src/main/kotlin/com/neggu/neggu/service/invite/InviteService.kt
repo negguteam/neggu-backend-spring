@@ -20,7 +20,7 @@ class InviteService(
     }
 
     fun invite(user: User): LookBookInvite {
-        val hourMilliseconds = 24 * 60 * 60 * 1000
+        val hourMilliseconds = 24 * 60 * 60 * 1000 // 24 hours
         val lookBookInvite = LookBookInvite(
             id = generateInviteCode(),
             accountId = user.id!!,
