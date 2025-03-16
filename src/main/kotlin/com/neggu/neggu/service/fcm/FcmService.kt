@@ -14,14 +14,16 @@ class FcmService {
 
     fun sendMessage(fcmMessageRequestDTO: FcmMessageRequestDTO): String {
         val message = generateMessage(fcmMessageRequestDTO)
-        return try {
-            val response = FirebaseMessaging.getInstance().send(message)
-            "Message sent successfully : $response"
-        } catch (e: Exception) {
-            e.printStackTrace()
-            log.nError(e.message.toString())
-            "Failed to send message"
-        }
+        return fcmMessageRequestDTO.token?.let {
+            return try {
+                val response = FirebaseMessaging.getInstance().send(message)
+                "Message sent successfully : $response"
+            } catch (e: Exception) {
+                e.printStackTrace()
+                log.nError(e.message.toString())
+                "Failed to send message"
+            }
+        } ?: "Failed to send message"
     }
 
     private fun generateMessage(fcmMessageRequestDTO: FcmMessageRequestDTO): Message =
