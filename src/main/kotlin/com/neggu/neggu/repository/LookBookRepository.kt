@@ -10,5 +10,7 @@ interface LookBookRepository : MongoRepository<LookBook, ObjectId> {
 
     fun findAllByAccountIdAndIsDeletedFalse(accountId: ObjectId, pageable: Pageable): Page<LookBook>
 
+    fun findAllByAccountIdAndIsDeletedFalse(accountId: ObjectId): List<LookBook>
+
     fun findByAccountId(accountId: ObjectId, pageable: Pageable): Page<LookBook>
 }

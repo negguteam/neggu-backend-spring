@@ -1,12 +1,13 @@
 package com.neggu.neggu.model.lookbook
 
 import io.swagger.v3.oas.annotations.media.Schema
+import org.bson.types.ObjectId
 
 data class LookBookCloth(
     @Schema(name = "imageUrl", example = "https://example.com/image/12345")
     val imageUrl: String,
     @Schema(name = "id", example = "678a539bc66af10ded74a1fb (옷 ID)")
-    val id: String,
+    val id: ObjectId,
     @Schema(name = "xRatio", example = "10.5")
     val xRatio: Float,
     @Schema(name = "yRatio", example = "10.5")
