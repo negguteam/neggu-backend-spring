@@ -5,16 +5,16 @@ import com.google.firebase.messaging.Message
 import com.google.firebase.messaging.Notification
 import com.neggu.neggu.config.LoggerConfig.log
 import com.neggu.neggu.config.LoggerConfig.nError
-import com.neggu.neggu.dto.fcm.FcmMessageRequestDTO
+import com.neggu.neggu.dto.fcm.FcmMessageRequest
 import org.springframework.stereotype.Service
 
 
 @Service
 class FcmService {
 
-    fun sendMessage(fcmMessageRequestDTO: FcmMessageRequestDTO): String {
-        val message = generateMessage(fcmMessageRequestDTO)
-        return fcmMessageRequestDTO.token?.let {
+    fun sendMessage(fcmMessageRequest: FcmMessageRequest): String {
+        val message = generateMessage(fcmMessageRequest)
+        return fcmMessageRequest.token?.let {
             return try {
                 val response = FirebaseMessaging.getInstance().send(message)
                 "Message sent successfully : $response"
@@ -26,13 +26,13 @@ class FcmService {
         } ?: "Failed to send message"
     }
 
-    private fun generateMessage(fcmMessageRequestDTO: FcmMessageRequestDTO): Message =
+    private fun generateMessage(fcmMessageRequest: FcmMessageRequest): Message =
         Message.builder()
-            .setToken(fcmMessageRequestDTO.token)
+            .setToken(fcmMessageRequest.token)
             .setNotification(
                 Notification.builder()
-                    .setTitle(fcmMessageRequestDTO.title)
-                    .setBody(fcmMessageRequestDTO.body)
+                    .setTitle(fcmMessageRequest.title)
+                    .setBody(fcmMessageRequest.body)
                     .build()
             )
             .build()

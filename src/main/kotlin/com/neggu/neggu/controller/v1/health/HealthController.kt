@@ -1,6 +1,6 @@
 package com.neggu.neggu.controller.v1.health
 
-import com.neggu.neggu.dto.fcm.FcmMessageRequestDTO
+import com.neggu.neggu.dto.fcm.FcmMessageRequest
 import com.neggu.neggu.exception.ErrorType
 import com.neggu.neggu.exception.ServerException
 import com.neggu.neggu.service.fcm.FcmService
@@ -28,7 +28,7 @@ class HealthController(
         @RequestParam title: String,
         @RequestParam body: String
     ): String{
-        return fcmService.sendMessage(FcmMessageRequestDTO(token, title, body))
+        return fcmService.sendMessage(FcmMessageRequest(token, title, body))
     }
 
     @GetMapping("/unknown-error")

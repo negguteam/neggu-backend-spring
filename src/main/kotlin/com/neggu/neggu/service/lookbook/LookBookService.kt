@@ -2,7 +2,7 @@ package com.neggu.neggu.service.lookbook
 
 import com.neggu.neggu.config.LoggerConfig.log
 import com.neggu.neggu.config.LoggerConfig.nInfo
-import com.neggu.neggu.dto.fcm.FcmMessageRequestDTO
+import com.neggu.neggu.dto.fcm.FcmMessageRequest
 import com.neggu.neggu.dto.lookbook.LookBookByInviteRequest
 import com.neggu.neggu.dto.lookbook.LookBookRequest
 import com.neggu.neggu.exception.ErrorType
@@ -64,7 +64,7 @@ class LookBookService(
             )
         ))
         userRepository.save(invitedUser.copy(lookBooks = invitedUser.lookBooks + savedLookBook.id!!))
-        fcmService.sendMessage(FcmMessageRequestDTO.from(invitedUser.fcmToken, "친구가 룩복을 등록했어요!!", "${user.nickname}님이 룩복을 등록했어요. 지금 당장 확인해보세요."))
+        fcmService.sendMessage(FcmMessageRequest.from(invitedUser.fcmToken, "친구가 룩복을 등록했어요!!", "${user.nickname}님이 룩복을 등록했어요. 지금 당장 확인해보세요."))
         return savedLookBook.also {
             log.nInfo("[Register] LookBook(${it.id}) by user ${user.id}\n Info : $it")
         }
