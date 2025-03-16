@@ -35,7 +35,52 @@ enum class Category(val displayName: String, val subCategories: List<SubCategory
             SubCategory.JUMPSUIT,
             SubCategory.SKIRT
         )
-    );
+    ),
+
+
+        DRESS(
+            "원피스",
+           listOf(
+                SubCategory.DRESS
+            )
+        ),
+
+       ACCESSORY(
+           "악세서리",
+           listOf(
+               SubCategory.NECKLACE,
+               SubCategory.EARRINGS,
+               SubCategory.BRACELET,
+               SubCategory.RING,
+               SubCategory.HAIR_ACCESSORY,
+               SubCategory.BELT,
+               SubCategory.WATCH
+           )
+       ),
+
+       BAG(
+           "가방",
+           listOf(
+               SubCategory.BACKPACK,
+               SubCategory.TOTE_BAG,
+               SubCategory.CLUTCH,
+               SubCategory.CROSSBODY_BAG,
+               SubCategory.SHOULDER_BAG,
+               SubCategory.LUGGAGE
+           )
+       ),
+
+       SHOES(
+           "신발",
+           listOf(
+               SubCategory.SNEAKERS,
+               SubCategory.DRESS_SHOES,
+               SubCategory.BOOTS,
+               SubCategory.SANDALS,
+               SubCategory.SLIPPERS,
+               SubCategory.FLATS
+           )
+       );
 }
 
 enum class SubCategory(val displayName: String) {
@@ -61,5 +106,33 @@ enum class SubCategory(val displayName: String) {
     SLACKS("슬랙스"),
     SHORTS("숏팬츠"),
     JUMPSUIT("점프슈트"),
-    SKIRT("스커트");
+    SKIRT("스커트"),
+
+    // 원피스
+    DRESS("원피스"),
+
+    // 악세서리
+    NECKLACE("목걸이"),
+    EARRINGS("귀걸이"),
+    BRACELET("팔찌"),
+    RING("반지"),
+    HAIR_ACCESSORY("헤어 악세서리"),
+    BELT("벨트"),
+    WATCH("시계"),
+
+    // 가방
+    BACKPACK("백팩"),
+    TOTE_BAG("토트백"),
+    CLUTCH("클러치"),
+    CROSSBODY_BAG("크로스바디백"),
+    SHOULDER_BAG("숄더백"),
+    LUGGAGE("러기지"),
+
+    // 신발
+    SNEAKERS("운동화"),
+    DRESS_SHOES("구두"),
+    BOOTS("부츠"),
+    SANDALS("샌들"),
+    SLIPPERS("슬리퍼"),
+    FLATS("플랫슈즈");
 }
