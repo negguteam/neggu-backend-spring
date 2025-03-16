@@ -2,10 +2,12 @@ package com.neggu.neggu.service.fcm
 
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.Message
+import com.google.firebase.messaging.Notification
 import com.neggu.neggu.config.LoggerConfig.log
 import com.neggu.neggu.config.LoggerConfig.nError
 import com.neggu.neggu.dto.fcm.FcmMessageRequestDTO
 import org.springframework.stereotype.Service
+
 
 @Service
 class FcmService {
@@ -25,7 +27,11 @@ class FcmService {
     private fun generateMessage(fcmMessageRequestDTO: FcmMessageRequestDTO): Message =
         Message.builder()
             .setToken(fcmMessageRequestDTO.token)
-            .putData("title", fcmMessageRequestDTO.title)
-            .putData("body", fcmMessageRequestDTO.body)
+            .setNotification(
+                Notification.builder()
+                    .setTitle(fcmMessageRequestDTO.title)
+                    .setBody(fcmMessageRequestDTO.body)
+                    .build()
+            )
             .build()
 }
