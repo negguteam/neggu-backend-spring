@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 
 
@@ -43,7 +42,7 @@ interface AuthApi {
     fun login(
         @Parameter(name = "provider", description = "소셜 로그인 제공자 설정(kakao, apple, google)", `in` = ParameterIn.PATH)
         provider: String,
-        idTokenRequest: IdTokenRequest,
+        userLoginRequest: UserLoginRequest,
     ): SocialLoginResponse
 
     @Operation(

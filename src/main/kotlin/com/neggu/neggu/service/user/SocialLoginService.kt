@@ -4,6 +4,7 @@ import com.neggu.neggu.config.LoggerConfig.log
 import com.neggu.neggu.config.LoggerConfig.nDebug
 import com.neggu.neggu.config.LoggerConfig.nInfo
 import com.neggu.neggu.dto.user.SocialLoginResponse
+import com.neggu.neggu.dto.user.UserLoginRequest
 import com.neggu.neggu.model.auth.OauthProvider
 import com.neggu.neggu.model.auth.OidcUser
 import com.neggu.neggu.model.auth.RefreshToken
@@ -26,15 +27,24 @@ class SocialLoginService(
 
     fun socialLogin(
         provider: OauthProvider,
-        idToken: String,
+        userLoginRequest: UserLoginRequest,
     ): SocialLoginResponse {
-        val oidcUser = resolveOidcUser(provider, idToken)
-
-        return userRepository.findByEmailAndOauthProvider(oidcUser.email, provider)
-            ?.let { user -> processExistingUser(user).also {
+        val oidcUser = resolveOidcUser(provider, userLoginRequest.idToken)
+        return userRepository.findByEmailAndOauthProvider(oidcUser.email, provider)?.let { user ->
+            updateFcmToken(user, userLoginRequest)
+            processExistingUser(user).also {
                 log.nDebug("User ${user.email} logged in with ${provider.name} accessToken : ${it.accessToken}")
-            } }
-            ?: createPendingRegistrationResponse(oidcUser, provider)
+            }
+        } ?: createPendingRegistrationResponse(oidcUser, provider)
+    }
+
+    private fun updateFcmToken(
+        user: User,
+        userLoginRequest: UserLoginRequest,
+    ) {
+        userLoginRequest.fcmToken?.let {
+            userRepository.save(user.copy(fcmToken = it))
+        }
     }
 
     private fun resolveOidcUser(

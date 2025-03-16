@@ -18,9 +18,9 @@ class AuthController(
     @PostMapping("/login/{provider}")
     override fun login(
         @PathVariable provider: String,
-        @RequestBody idTokenRequest: IdTokenRequest,
+        @RequestBody userLoginRequest: UserLoginRequest,
     ): SocialLoginResponse {
-        return socialLoginService.socialLogin(OauthProvider.from(provider), idTokenRequest.idToken)
+        return socialLoginService.socialLogin(OauthProvider.from(provider), userLoginRequest)
     }
 
     @PostMapping("/register")
