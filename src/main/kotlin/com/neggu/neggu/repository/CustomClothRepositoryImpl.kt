@@ -23,6 +23,7 @@ class CustomClothRepositoryImpl(
     ): Page<Cloth> {
         val query = Query().apply {
             addCriteria(Criteria.where("accountId").`is`(acountId))
+            addCriteria(Criteria.where("isDeleted").`is`(false))
             category?.let { addCriteria(Criteria.where("category").`is`(it)) }
             subCategory?.let { addCriteria(Criteria.where("subCategory").`is`(it)) }
             colors?.takeIf { it.isNotEmpty() }?.let {

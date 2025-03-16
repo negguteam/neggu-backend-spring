@@ -115,8 +115,9 @@ class ClothService(
         if (cloth.accountId != user.id) {
             throw UnAuthorizedException(ErrorType.InvalidIdToken)
         }
-        clothRepository.delete(cloth)
-        s3Service.deleteFile(cloth.imageUrl)
+        // TODO 옷 삭제시에 이미지 삭제 정책
+        // s3Service.deleteFile(cloth.imageUrl)
+        clothRepository.save(cloth.copy(isDeleted = true))
         userRepository.save(user.copy(clothes = user.clothes.filter { it != cloth.id }))
         return cloth.also {
             log.nInfo("Cloth(${it.id}) deleted by user ${user.id}\n Cloth Info : $it")

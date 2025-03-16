@@ -46,6 +46,7 @@ data class ClothRegisterRequest(
             name = name,
             colorCode = colorCode,
             color = clothColor,
+            isDeleted = false
         )
     }
 }

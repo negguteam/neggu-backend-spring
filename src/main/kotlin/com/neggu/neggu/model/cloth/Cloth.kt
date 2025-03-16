@@ -41,5 +41,5 @@ data class Cloth(
     val colorCode: String,
     @Schema(description = "ClothColor of the clothing", example = "PURPLE")
     val color: ClothColor = ClothColor.OTHERS,
-    val isDeleted: Boolean = false,
+    val isDeleted: Boolean? = false,
 ) : AuditableEntity()
