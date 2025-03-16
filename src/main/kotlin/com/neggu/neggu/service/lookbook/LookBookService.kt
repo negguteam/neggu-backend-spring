@@ -71,7 +71,7 @@ class LookBookService(
         val lookBook = lookBookRepository.findByIdOrNull(lookBookId.toObjectId()) ?: throw ServerException(ErrorType.NotFoundLookBook)
         if (lookBook.accountId != user.id) { throw UnAuthorizedException(ErrorType.InvalidIdToken) }
         s3Service.deleteFile(lookBook.imageUrl)
-        lookBookRepository.delete(lookBook)
+        lookBookRepository.save(lookBook.copy(isDeleted = true))
         userRepository.save(user.copy(lookBooks = user.lookBooks.filter { it != lookBook.id }))
         return lookBook.also {
             log.nInfo("[Delete] LookBook(${it.id}) by user ${user.id}\n Info : $it")
@@ -79,7 +79,7 @@ class LookBookService(
     }
 
     fun getLookBooks(user: User, size: Int, page: Int): Page<LookBook> {
-        return lookBookRepository.findByAccountId(user.id!!, PageRequest.of(page, size, Sort.by("createdAt").descending()))
+        return lookBookRepository.findAllByAccountIdAndIsDeletedFalse(user.id!!, PageRequest.of(page, size, Sort.by("createdAt").descending()))
     }
 
     fun getLookBook(user: User, lookBookId: String): LookBook {
