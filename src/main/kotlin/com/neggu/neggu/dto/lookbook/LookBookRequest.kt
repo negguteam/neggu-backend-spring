@@ -5,6 +5,7 @@ import java.time.LocalDateTime
 
 data class LookBookRequest(
     val lookBookClothes: List<LookBookCloth>,
+    val targetDate: LocalDateTime? = null
 )
 
 data class LookBookByInviteRequest(

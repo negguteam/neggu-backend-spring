@@ -36,13 +36,19 @@ oidc:
   provider:
     kakao:
       iss: https://kauth.kakao.com
-      aud: ENC(9A0tR+kkLaKN+sWvP4+ZG65f6fBxRk+OcbGk99Nmz/B4R9GQra6PsYGoZuQ3LFPp)
+      # Native Key
+      # aud: ENC(9A0tR+kkLaKN+sWvP4+ZG65f6fBxRk+OcbGk99Nmz/B4R9GQra6PsYGoZuQ3LFPp)
+      # Rest Key
+      aud: ENC(caxdV9jcRgaxarLrHjE151OlWzvqQyW4C+BoMx6bKlAq3Gruo2jB5+952kmKa5mS)
     apple:
       iss: https://appleid.apple.com
       aud: ENC(imDf1ErWsRKty6VPe8hRNwCLGmriM4nc)
     google:
       iss: https://accounts.google.com
-      aud: ENC(79S7j3tcNCuw01QVX/MtGOyT5CyYEJyN1KcUPOl65dFslzjdhzrfbvW2cUHfHb7ElPKdEPlLODVGFNyB3uepF3IoRRxs+qYpE6liUoEacfuBvGQyor2m4g==)
+      # Native Key
+      # aud: ENC(79S7j3tcNCuw01QVX/MtGOyT5CyYEJyN1KcUPOl65dFslzjdhzrfbvW2cUHfHb7ElPKdEPlLODVGFNyB3uepF3IoRRxs+qYpE6liUoEacfuBvGQyor2m4g==)
+      # REST Key
+      aud: ENC(L0YDH1zPebW3v48+6d3IqFDaHPylWRQbNZXVvRGOaDbeGnkUnT+HXkrgsRjdkUb9zLHyP/r40GLNioCXzwYlfT3WhE2gUFZXO10MAczOw4E1aKDJnjzQAg==)
 
 open-id-connect:
   kakao: https://kauth.kakao.com

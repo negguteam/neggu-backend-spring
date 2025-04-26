@@ -40,7 +40,14 @@ class LookBookService(
         val savedLookBook = lookBookRepository.save(LookBook(
             accountId = user.id!!,
             imageUrl = fileName,
-            lookBookClothes = lookBookRequest.lookBookClothes
+            lookBookClothes = lookBookRequest.lookBookClothes,
+            decorator = lookBookRequest.targetDate?.let {
+                LookBookDecorator(
+                    accountId = user.id!!,
+                    imageUrl = user.profileImage,
+                    targetDate = lookBookRequest.targetDate,
+                )
+            }
         ))
         userRepository.save(user.copy(lookBooks = user.lookBooks + savedLookBook.id!!))
         return savedLookBook.also {
