@@ -5,6 +5,7 @@ import com.neggu.neggu.config.LoggerConfig.nInfo
 import com.neggu.neggu.dto.fcm.FcmMessageRequest
 import com.neggu.neggu.dto.lookbook.LookBookByInviteRequest
 import com.neggu.neggu.dto.lookbook.LookBookRequest
+import com.neggu.neggu.dto.lookbook.LookBookTargetDateRequest
 import com.neggu.neggu.exception.ErrorType
 import com.neggu.neggu.exception.ServerException
 import com.neggu.neggu.exception.UnAuthorizedException
@@ -24,6 +25,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.multipart.MultipartFile
+import java.time.LocalDateTime
 
 @Service
 class LookBookService(
@@ -76,6 +78,23 @@ class LookBookService(
             log.nInfo("[Register] LookBook(${it.id}) by user ${user.id}\n Info : $it")
         }
     }
+
+    @Transactional
+    fun updateLookBookTargetDate(user: User, lookBookId: String, lookBookTargetDateRequest: LookBookTargetDateRequest): LookBook {
+        val lookBook = lookBookRepository.findByIdOrNull(lookBookId.toObjectId()) ?: throw ServerException(ErrorType.NotFoundLookBook)
+        if (lookBook.accountId != user.id) { throw UnAuthorizedException(ErrorType.InvalidIdToken) }
+        val targetDate = lookBookTargetDateRequest.targetDate
+        val decorator = lookBook.decorator?.copy(targetDate = targetDate) ?: LookBookDecorator(
+            accountId = user.id!!,
+            imageUrl = user.profileImage,
+            targetDate = targetDate,
+        )
+        val updatedLookBook = lookBook.copy(decorator = decorator)
+        return lookBookRepository.save(updatedLookBook).also {
+            log.nInfo("[Update] LookBook(${it.id}) by user ${user.id}\n Info : $it")
+        }
+    }
+
 
     @Transactional
     fun deleteLookBook(user: User, lookBookId: String): LookBook {

@@ -4,6 +4,7 @@ import com.neggu.neggu.annotation.AccessTokenRequire
 import com.neggu.neggu.config.LoginUser
 import com.neggu.neggu.dto.lookbook.LookBookByInviteRequest
 import com.neggu.neggu.dto.lookbook.LookBookRequest
+import com.neggu.neggu.dto.lookbook.LookBookTargetDateRequest
 import com.neggu.neggu.model.cloth.Category
 import com.neggu.neggu.model.cloth.Cloth
 import com.neggu.neggu.model.cloth.ColorGroup
@@ -53,6 +54,17 @@ class LookBookController(
     ): LookBook {
         return lookBookService.registerLookBook(user, image, lookBookRequest)
     }
+
+    @AccessTokenRequire
+    @PostMapping("/date")
+    override fun updateLookBookTargetDate(
+        @LoginUser user: User,
+        lookBookId: String,
+        lookBookTargetDateRequest: LookBookTargetDateRequest
+    ): LookBook {
+        return lookBookService.updateLookBookTargetDate(user, lookBookId, lookBookTargetDateRequest)
+    }
+
 
     @AccessTokenRequire
     @PostMapping(

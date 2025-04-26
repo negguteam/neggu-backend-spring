@@ -8,6 +8,10 @@ data class LookBookRequest(
     val targetDate: LocalDateTime? = null
 )
 
+data class LookBookTargetDateRequest(
+    val targetDate: LocalDateTime
+)
+
 data class LookBookByInviteRequest(
     val lookBookClothes: List<LookBookCloth>,
     val targetDate: LocalDateTime,

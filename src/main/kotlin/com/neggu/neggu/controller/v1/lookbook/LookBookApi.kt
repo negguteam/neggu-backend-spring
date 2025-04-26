@@ -2,7 +2,7 @@ package com.neggu.neggu.controller.v1.lookbook
 
 import com.neggu.neggu.dto.lookbook.LookBookByInviteRequest
 import com.neggu.neggu.dto.lookbook.LookBookRequest
-import com.neggu.neggu.model.lookbook.LookBookCloth
+import com.neggu.neggu.dto.lookbook.LookBookTargetDateRequest
 import com.neggu.neggu.model.cloth.Category
 import com.neggu.neggu.model.cloth.Cloth
 import com.neggu.neggu.model.cloth.ColorGroup
@@ -61,6 +61,13 @@ interface LookBookApi {
     fun getLookBook(
         @Schema(hidden = true) user: User,
         lookBookId: String,
+    ): LookBook
+
+    @Operation(summary = "룩복 일정 수정")
+    fun updateLookBookTargetDate(
+        @Schema(hidden = true) user: User,
+        lookBookId: String,
+        lookBookTargetDateRequest: LookBookTargetDateRequest
     ): LookBook
 
     @Operation(summary = "네가 좀 꾸며줘")
