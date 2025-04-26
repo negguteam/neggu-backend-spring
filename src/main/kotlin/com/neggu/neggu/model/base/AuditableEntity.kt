@@ -11,9 +11,9 @@ abstract class AuditableEntity(
     @get:JvmName("getAuditableEntityId")
     open var id: ObjectId? = null,
     @CreatedDate
-    var createdAt: LocalDateTime? = null,
+     var createdAt: LocalDateTime? = null,
     @LastModifiedDate
-    var modifiedAt: LocalDateTime? = null,
+     var modifiedAt: LocalDateTime? = null,
 ) : Persistable<ObjectId> {
 
     override fun getId(): ObjectId? = id

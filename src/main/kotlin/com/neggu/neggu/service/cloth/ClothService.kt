@@ -42,7 +42,7 @@ class ClothService(
         mood: Mood?,
         size: Int,
         page: Int,
-        sortProperty: String = "createdAt",
+        sortProperty: String = "modifiedAt",
     ): Page<Cloth> {
         val pageable = PageRequest.of(page, size, Sort.by(sortProperty).descending())
         return clothRepository.findClothesDynamic(
@@ -67,7 +67,7 @@ class ClothService(
     ): Page<Cloth> {
         val lookbookInvite = inviteRepository.findByIdOrNull(inviteCode) ?: throw ServerException(ErrorType.NotFoundInvite)
         val invitedUser = userRepository.findByIdOrNull(lookbookInvite.accountId) ?: throw ServerException(ErrorType.NotFoundUser)
-        val pageable = PageRequest.of(page, size, Sort.by("createdAt").descending())
+        val pageable = PageRequest.of(page, size, Sort.by("modifiedAt").descending())
         return clothRepository.findClothesDynamic(
             invitedUser.id!!,
             category,
@@ -102,12 +102,35 @@ class ClothService(
             throw UnAuthorizedException(ErrorType.InvalidIdToken)
         }
         val clothColor = colorFinder.findColor(clothRegisterRequest.colorCode)
-
-        val savedCloth = clothRepository.save(clothRegisterRequest.toCloth(clothColor))
+        val cloth = clothRepository.findByIdOrNull(clothRegisterRequest.id.toObjectId()) ?: throw ServerException(ErrorType.NotFoundCloth)
+        println("cloth $cloth -----------------------")
+        println("createdAt ${cloth.createdAt} -----------------------")
+        val savedCloth = clothRepository.save(copyCloth(cloth, clothRegisterRequest, clothColor))
+        println("savedCloth $savedCloth -----------------------")
         return clothRepository.save(savedCloth).also {
             log.nInfo("[Update] Cloth(${it.id}) by user ${user.id}\n Cloth Info : $it")
         }
     }
+
+    private fun copyCloth(
+        cloth: Cloth,
+        clothRegisterRequest: ClothModifyRequest,
+        clothColor: ClothColor,
+    ) = cloth.copy(
+        name = clothRegisterRequest.name,
+        brand = clothRegisterRequest.brand,
+        accountId = clothRegisterRequest.accountId.toObjectId(),
+        category = clothRegisterRequest.category,
+        subCategory = clothRegisterRequest.subCategory,
+        colorCode = clothRegisterRequest.colorCode,
+        mood = clothRegisterRequest.mood,
+        imageUrl = cloth.imageUrl,
+        priceRange = clothRegisterRequest.priceRange,
+        memo = clothRegisterRequest.memo,
+        isPurchase = clothRegisterRequest.isPurchase,
+        link = clothRegisterRequest.link,
+        color = clothColor,
+    )
 
     @Transactional
     fun deleteCloth(user: User, objectId: ObjectId): Cloth {
